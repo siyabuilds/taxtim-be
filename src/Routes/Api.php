@@ -3,9 +3,13 @@
 namespace App\Routes;
 
 use App\Routing\Router;
+use App\Controllers\AuthController;
 use App\Controllers\TransactionController;
 
 $router = new Router();
+
+$router->post('/api/register', [AuthController::class, 'register']);
+$router->post('/api/login', [AuthController::class, 'login']);
 
 $router->get('/api/transactions', [TransactionController::class, 'getTransactions']);
 $router->post('/api/transactions', [TransactionController::class, 'addTransactions']);

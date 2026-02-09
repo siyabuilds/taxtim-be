@@ -4,9 +4,15 @@ namespace App\Controllers;
 
 use App\Services\TransactionService;
 use App\Models\Transaction;
+use App\Middleware\AuthMiddleware;
 
 class TransactionController
 {
+    public function __construct()
+    {
+        AuthMiddleware::handle();
+    }
+
     public function addTransactions(): void
     {
         $rawInput = file_get_contents('php://input');
