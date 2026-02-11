@@ -85,7 +85,7 @@ class TransactionService
                     $rows[] = FifoHelper::formatRow($tx, 0, 0, []);
                     break;
                 case TransactionType::SELL:
-                    $proceeds = (float)$tx->buyAmount * (float)$tx->pricePerCoin;
+                    $proceeds = (float)$tx->sellAmount * (float)$tx->pricePerCoin;
 
                     $fifo = FifoHelper::fifoSell(
                         $tx->sellCoin,
@@ -102,7 +102,7 @@ class TransactionService
                     break;
 
                 case TransactionType::TRADE:
-                    $proceeds = $tx->buyAmount * $tx->pricePerCoin;
+                    $proceeds = (float)$tx->buyAmount * (float)$tx->pricePerCoin;
 
                     $fifo = FifoHelper::fifoSell(
                         $tx->sellCoin,
@@ -114,6 +114,12 @@ class TransactionService
 
                     $capitalGains[$taxYear][$tx->sellCoin] =
                         ($capitalGains[$taxYear][$tx->sellCoin] ?? 0) + $gain;
+
+                    $balances[$tx->buyCoin][] = [
+                        'qty' => (float)$tx->buyAmount,
+                        'price' => (float)$tx->pricePerCoin,
+                        'date' => $tx->date->format('Y-m-d')
+                    ];
 
                     $rows[] = FifoHelper::formatRow($tx, $proceeds, $gain, $fifo['lots']);
                     break;
